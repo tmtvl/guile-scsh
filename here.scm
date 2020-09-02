@@ -4,42 +4,42 @@
 ;;; Copyright (c) 1995 by Olin Shivers. See file COPYING.
 
 ;;; There are two kinds of here string, both introduced by the #< read macro.
-;;; 
+;;;
 ;;; Character-delimited here strings:
 ;;; A *character-delimited* here string has the form 
 ;;;     #<x...stuff...x
 ;;; where x is any single character (except <, see below), which is used
 ;;; to delimit the string bounds.
 ;;; Here are some examples:
-;;; 
+;;;
 ;;;     Here string syntax		Ordinary syntax
 ;;;     ------------------		---------------
 ;;;     #<|Hello, world.|		"Hello, world."
 ;;;     #<!"Ouch," he said.!		"\"Ouch,\" he said."
-;;; 
+;;;
 ;;; There is *no* interpretation of characters within the here string;
 ;;; characters are all copied verbatim.
-;;; 
+;;;
 ;;; Line-delimited here strings:
 ;;; If the macro begins "#<<" then it introduces a *line-delimited* here
 ;;; string.  These are similar to the "here documents" of sh and
 ;;; csh. Line-delimited here strings are delimited by the line of text coming
 ;;; after the "#<<" sequence. For example:
-;;; 
+;;;
 ;;; #<FOO
 ;;; Hello, there.
 ;;; This is read by Scheme as a string,
 ;;; terminated by the first occurrence
 ;;; of newline-F-O-O-newline or newline-F-O-O-eof.
 ;;; FOO
-;;; 
-;;; Thus, 
+;;;
+;;; Thus,
 ;;;     #<foo
 ;;;     Hello, world.
 ;;;     foo
 ;;; is the same thing as
 ;;;     "Hello, world."
-;;; 
+;;;
 ;;; These are useful for writing down long, constant strings -- such
 ;;; as long, multi-line FORMAT strings, or arguments to Unix programs, e.g.
 ;;; 	;; Free up some disk space for my netnews files.
@@ -55,7 +55,7 @@
 ;;; is that there is no need to backslash-quote special characters internal
 ;;; to the string, such as the double-quote or backslash characters.
 
-;;; Line-delimited here-string syntax: 
+;;; Line-delimited here-string syntax:
 ;;; The characters "#<<" introduce the here-string.  The characters
 ;;; between the "#<<" and the next newline are the *delimiter line*. *All* chars
 ;;; between the "#<<" and the next newline comprise the delimiter line --

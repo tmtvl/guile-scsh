@@ -15,7 +15,7 @@
   (bitwise-ior open/write (bitwise-ior open/create open/truncate)))
 
 (define open/write+append+create
-  (bitwise-ior open/write 
+  (bitwise-ior open/write
 	       (bitwise-ior  open/append open/create)))
 
 (define (shell-open path flags fdes)

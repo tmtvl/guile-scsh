@@ -29,7 +29,7 @@
 (define-structure obsolete-char-set-lib obsolete-char-set-interface
   (open scsh-utilities char-set-lib scheme)
   (begin
-    
+
     (define char-set-members
       (deprecated-proc char-set->list 'char-set-members
 		       "Use CHAR-SET->LIST instead."))

@@ -80,7 +80,7 @@
 ;(define any first?)
 
 ; (define (every pred list)
-;   (or (not (pair? list))	
+;   (or (not (pair? list))
 ;       (let lp ((head (car list))  (tail (cdr list)))
 ; 	(if (pair? tail)
 ; 	    (and (pred head) (lp (car tail) (cdr tail)))
@@ -132,7 +132,7 @@
 		     (lp2 (+ from 1) (+ to 1)))
 		    (else (lp1 (cdr vecs) to)))))))
     ans))
-      
+
 
 (define (vfold kons knil v)
   (let ((len (vector-length v)))

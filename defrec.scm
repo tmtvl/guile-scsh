@@ -14,7 +14,7 @@
 ;;; the the record maker procedure. A defaulted field takes its value from
 ;;; the the DEFAULT expression. If a DEFAULT expression is not given, then
 ;;; the defaulted field's initial value is undefined.
-;;; 
+;;;
 ;;; Example:
 ;;; (define-record employee
 ;;;     name
@@ -23,12 +23,12 @@
 ;;;     (department)	; Initial value undefined.
 ;;;     sex
 ;;;     married?)
-;;; 
+;;;
 ;;; Defines the following:
 ;;; - A maker procedure:
 ;;;   (make-employee "John Smith" 742931 'male #f)
 ;;;   MAKE-EMPLOYEE takes one argument for each initialised field.
-;;; 
+;;;
 ;;; - Accessor procedures:
 ;;;   (employee:name emp)
 ;;;   (employee:id emp)
@@ -36,7 +36,7 @@
 ;;;   (employee:department emp)
 ;;;   (employee:sex emp)
 ;;;   (employee:married? emp)
-;;; 
+;;;
 ;;; - Field-setting procedures:
 ;;;   (set-employee:name emp "Janet Q. Random")
 ;;;   (set-employee:id emp 8271)
@@ -44,7 +44,7 @@
 ;;;   (set-employee:department emp "Vaporware")
 ;;;   (set-employee:sex emp 'female)
 ;;;   (set-employee:married? emp #t)
-;;; 
+;;;
 ;;; - Field-modifier procedures:
 ;;;   (modify-employee:salary emp (lambda (s) (* 1.03 s))) ; 3% raise
 ;;;   ...similarly for other fields.
@@ -54,7 +54,7 @@
 ;;;
 ;;; - A type predicate:
 ;;;   (employee? x)
-;;; 
+;;;
 ;;; - The record type descriptor:
 ;;;     type/employee
 
@@ -158,7 +158,7 @@
 	    ,(if (null? default-field-specs)
 		 ;; Gratuitous optimisation:
 		 `(,%record-constructor ,type-name ',param-fields)
-	      
+
 		 ;; Full-blown form.
 		 `(,%let ((,maker (,%record-constructor
 				   ,type-name
@@ -170,7 +170,7 @@
 
 	  ;; Type predicate (EMPLOYEE? x)
 	  (,%define ,pred-name (,%record-predicate ,type-name))
-       
+
 	  ;; Accessors (EMPLOYEE:NAME emp), ...
 	  ,@(map (lambda (field)
 		   `(,%define ,(field-name field)

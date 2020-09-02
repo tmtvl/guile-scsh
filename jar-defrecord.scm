@@ -16,7 +16,7 @@
 ;; this should export
 (define-module (scsh jar-defrecord)
   :use-module (scsh alt-syntax))
-;; define-accessor[s] 
+;; define-accessor[s]
 (export-syntax define-record-type define-accessor define-accessors)
 
 (define-syntax define-record-type

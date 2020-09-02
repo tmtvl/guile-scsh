@@ -42,7 +42,7 @@
 ;;; the effective uid, so that setuid programs can figure out if the luser
 ;;; has perms. file-not-accessible? is defined in terms of the effective uid, 
 ;;; so we can't use access().
-;;; 
+;;;
 ;;; This is a kind of bogus function. The only way to do a real check is to
 ;;; try an open() and see if it flies. Otherwise, there's an obvious atomicity
 ;;; problem. Also, we special case root, saying root always has all perms. But
@@ -50,7 +50,7 @@
 ;;; this case, we'd blithely say the file was writeable -- there's no way to
 ;;; check for a ROFS without doing an open(). We need a euid analog to
 ;;; access(). Ah, well.
-;;; 
+;;;
 ;;; I also should define a family of real uid perm-checking calls.
 ;;;
 ;;; Return values:
@@ -92,11 +92,11 @@
 
 		   ((= (file-info:uid info) (user-effective-uid)) ; User
 		    (zero? (bitwise-and acc (arithmetic-shift perms 6))))
-		      
+
 		   ((or (= (file-info:gid info) (user-effective-gid)) ; Group
 			(memv (file-info:gid info) (user-supplementary-gids)))
 		    (zero? (bitwise-and acc (arithmetic-shift perms 3))))
-		      
+
 		   (else		; Other
 		    (zero? (bitwise-and acc perms)))))
 	   'permission))))

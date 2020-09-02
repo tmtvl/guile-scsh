@@ -113,11 +113,11 @@
 		     "create-symlink"
 		     create-symlink))
 
-;;; Unix rename() works backwards from mkdir(), mkfifo(), link(), and 
+;;; Unix rename() works backwards from mkdir(), mkfifo(), link(), and
 ;;; symlink() -- it overrides by default, (though insisting on a type
 ;;; match between the old and new object). So we can't use create-file-thing.
 ;;; Note that this loop has a tiny atomicity problem -- if someone
-;;; creates a file *after* we do our existence check, but *before* we 
+;;; creates a file *after* we do our existence check, but *before* we
 ;;; do the rename, we could end up overriding it, when the user asked
 ;;; us not to. That's life in the food chain.
 

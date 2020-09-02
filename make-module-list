@@ -3,7 +3,7 @@
 
 ;; create a list of module exports for the documentation.
 
-(define files 
+(define files
   (map (lambda (sym)
 	 (string-append (symbol->string sym) ".scm"))
 ;; list of files to be scanned.
@@ -81,7 +81,7 @@
 	(error "EOF when looking for module name")
 	(or (module-name obj)
 	    (get-module-name port)))))
-  
+
 ;; read expressions from a port until EOF, appending any symbols
 ;; that appear in top level export or export-syntax forms onto
 ;; the result list.  return the result list.
@@ -95,10 +95,10 @@
 	    (get-exports port (append result (cdr obj)))
 	    (get-exports port result)))))
 
-;; helper for do-file.	
+;; helper for do-file.
 (define (do-port port)
   (cons (get-module-name port) (get-exports port '())))
-  
+
 ;; return a pair containing module name and exported symbols for a given
 ;; file.
 (define (get-module-exports file)

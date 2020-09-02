@@ -112,7 +112,7 @@
 	       fname)))	; Posix strangeness: solid slashes are root.
 	(else fname)))
 
-    
+
 (define (split-file-name fname)
   (let* ((fname (ensure-file-name-is-nondirectory fname))
 	 (len (string-length fname)))
@@ -141,7 +141,7 @@
 		    (string=? "" (car pathlist)))
 	       w/slashes ; Absolute path not relocated.
 	       (cons (file-name-as-directory root) w/slashes)))))
-		   
+
 
 (define (parse-file-name fname)
   (let ((nd (file-name-nondirectory fname)))

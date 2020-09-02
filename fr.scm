@@ -24,17 +24,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; It is nicer for loops that loop over a bunch of different things
 ;;; if you can encapsulate the idea of iterating over a data structure
-;;; with a 
+;;; with a
 ;;;     (next-element state) -> elt next-state
 ;;;     (more-elements? state) -? #t/#f
 ;;; generator/termination-test pair. You can use the generator with REDUCE
-;;; to make a list; you can stick it into a loop macro to loop over the 
+;;; to make a list; you can stick it into a loop macro to loop over the
 ;;; elements. For example, if we had an extensible Yale-loop style loop macro,
 ;;; we could have a loop clause like
-;;; 
+;;;
 ;;;     (loop (for field in-infix-delimited-string ":" path)
 ;;;           (do (display field) (newline)))
-;;; 
+;;;
 ;;; and it would be simple to expand this into code using the generator.
 ;;; With procedural inlining, you can get pretty optimal loops over data
 ;;; structures this way.
@@ -50,20 +50,20 @@
 ;;; that string can conceivably get stuck in an infinite loop if the
 ;;; regexp matches the empty string. For example, the regexps
 ;;; ^, $, .*, foo|[^f]* can all match the empty string.
-;;; 
-;;; The regexp-loop routines in this code are careful to handle this case. 
+;;;
+;;; The regexp-loop routines in this code are careful to handle this case.
 ;;; If a regexp matches the empty string, the next search starts, not from
-;;; the end of the match (which in the empty string case is also the 
+;;; the end of the match (which in the empty string case is also the
 ;;; beginning -- there's the rub), but from the next character over.
 ;;; This is the correct behaviour. Regexps match the longest possible
 ;;; string at a given location, so if the regexp matched the empty string
 ;;; at location i, then it is guaranteed they could not have matched
 ;;; a longer pattern starting with character #i. So we can safely begin
 ;;; our search for the next match at char i+1.
-;;; 
+;;;
 ;;; So every iteration through the loop makes some forward progress,
 ;;; and the loop is guaranteed to terminate.
-;;; 
+;;;
 ;;; This has the effect you want with field parsing. For example, if you split
 ;;; a string with the empty pattern, you will explode the string into its
 ;;; individual characters:
@@ -166,8 +166,8 @@
 ;;;
 ;;; The CONS-FIELD argument is a procedure that parameterises the
 ;;; HANDLE-DELIM action for the field parser.
-;;; 
-;;; The MATCH-DELIM argument is used to match a delimiter. 
+;;;
+;;; The MATCH-DELIM argument is used to match a delimiter.
 ;;; (MATCH-DELIM S I) returns two integers [start, end] marking
 ;;; the next delimiter after index I in string S. If no delimiter is
 ;;; found, it returns [#f #f].
@@ -222,7 +222,7 @@
 			     (cond ((and num-fields (< (+ nfields 1) num-fields))
 				    (error "Too few fields in record."
 					   num-fields s))
-			      
+
 				   ((and nfields-exact?
 					 (>= nfields num-fields))
 				    (error "Too many fields in record."
@@ -240,7 +240,7 @@
 		       (error "Too many fields in record." num-fields s)
 		       (cons (substring s i end) fields)))
 
-	    
+
 		  ((<= j end)		; Match off another field.
 		   (receive (m0 m1) (match-delim s j)
 		     (if m0
@@ -364,7 +364,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; (field-reader [field-parser rec-reader]) -> reader
 ;;; (reader [port]) -> [raw-record parsed-record] or [eof #()]
-;;; 
+;;;
 ;;; This is the field reader, which is basically just a composition of
 ;;; RECORD-READER and FIELD-PARSER.
 

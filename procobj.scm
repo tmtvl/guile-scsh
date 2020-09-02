@@ -29,14 +29,14 @@
 
 (define-record proc		; A process object
   pid		; Proc's pid.
-  (%status #f)	; The cached exit status of the process; 
+  (%status #f)	; The cached exit status of the process;
                 ; #f if we haven't wait(2)'d the process yet.
 
   ;; Make proc objects print like #{proc 2318}.
   ((disclose p) (list "proc" (proc:pid p))))
 
 
-;;; Indexing this table by pid requires a linear scan. 
+;;; Indexing this table by pid requires a linear scan.
 ;;; Probably not an important op, tho.
 
 (define process-table (make-population))

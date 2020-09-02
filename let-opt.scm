@@ -3,7 +3,7 @@
 ;;; See file COPYING.
 
 ;;; This file defines three macros for parsing optional arguments to procs:
-;;; 	(LET-OPTIONALS  arg-list (opt-clause1 ... opt-clauseN [rest]) 
+;;; 	(LET-OPTIONALS  arg-list (opt-clause1 ... opt-clauseN [rest])
 ;;;       body ...)
 ;;; 	(LET-OPTIONALS* arg-list (opt-clause1 ... opt-clauseN [rest])
 ;;;       body ...)
@@ -30,7 +30,7 @@
 ;;; explicit-renaming low-level macro system. You'll have to do some work to
 ;;; port it to another macro system.
 ;;;
-;;; The :OPTIONAL macro is defined with simple high-level macros, 
+;;; The :OPTIONAL macro is defined with simple high-level macros,
 ;;; and should be portable to any R4RS system.
 ;;;
 ;;; These macros are all careful to evaluate their default forms *only* if
@@ -40,25 +40,25 @@
 ;;; very good code.
 ;;;
 ;;; The top-level forms in this file are Scheme 48 module expressions.
-;;; I use the module system to help me break up the expander code for 
+;;; I use the module system to help me break up the expander code for
 ;;; LET-OPTIONALS into three procedures, which makes it easier to understand
 ;;; and test. But if you wanted to port this code to a module-less Scheme
 ;;; system, you'd probably have to inline the auxiliary procs into the actual
 ;;; macro definition.
 ;;;
-;;; To repeat: This code is not simple Scheme code; it is module code. 
-;;; It must be loaded into the Scheme 48 ,config package, not the ,user 
-;;; package. 
+;;; To repeat: This code is not simple Scheme code; it is module code.
+;;; It must be loaded into the Scheme 48 ,config package, not the ,user
+;;; package.
 ;;;
 ;;; The only non-R4RS dependencies in the macros are ERROR, RECEIVE,
 ;;; and CALL-WITH-VALUES.
-;;; 
+;;;
 ;;; See below for details on each macro.
 ;;; 	-Olin
 
 ;;; (LET-OPTIONALS* arg-list (clause ... [rest]) body ...)
 ;;; (LET-OPTIONALS  arg-list (clause ... [rest]) body ...)
-;;; 
+;;;
 ;;; clause ::= (var default [arg-test supplied?])	; The simple case
 ;;;        |   ((var1 ...) external-arg-parser)		; external hook
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -78,7 +78,7 @@
 ;;;
 ;;; - The default expressions are *not* evaluated unless needed.
 ;;;
-;;; - When a LET-OPTIONALS* form is evaluated, the default expressions are 
+;;; - When a LET-OPTIONALS* form is evaluated, the default expressions are
 ;;;   carried out in a "sequential" LET*-style scope -- each clause is
 ;;;   evaluated in a scope that sees the bindings introduced by the previous
 ;;;   clauses.
@@ -103,7 +103,7 @@
 ;;;
 ;;; - A SUPPLIED? variable is bound to true/false depending on whether or
 ;;;   not a value was passed in by the caller for this parameter.
-;;; 
+;;;
 ;;; - If there's a final REST variable in the binding list, it is bound
 ;;;   to any leftover unparsed values from ARG-LIST. If there isn't a final
 ;;;   REST var, it is an error to have extra values left. You can use this
@@ -116,7 +116,7 @@
 ;;;   is applied to the argument list. It returns n+1 values: one
 ;;;   for the leftover argument list, and one for each VARi.
 ;;;
-;;;   This facility is intended for things like substring start/end index 
+;;;   This facility is intended for things like substring start/end index
 ;;;   pairs. You can abstract out the code for parsing the pair of arguments
 ;;;   in a separate procedure (parse-substring-index-args args string proc)
 ;;;   and then a function such as READ-STRING! can simply invoke the procedure
@@ -137,7 +137,7 @@
 ;;;     ...))
 ;;;
 ;;; expands to:
-;;; 
+;;;
 ;;; (let* ((body (lambda (port start end) ...))
 ;;;        (end-def (lambda (port start) (body port start <end-default>)))
 ;;;        (start-def (lambda (port) (end-def port <start-default>)))
@@ -225,7 +225,7 @@
     (let recur ((vars vars)
 		(rev-params '())	; These guys
 		(rev-vals '())		; have these values.
-		(sup-vars sup-vars)	
+		(sup-vars sup-vars)
 		(rev-sup-params '())	; These guys
 		(rev-sup-vals '())	; have these values.
 		(defaulter-names defaulter-names)
@@ -297,7 +297,7 @@
 	(%cdr (rename 'cdr))
 	(make-rv (let ((g (make-gensym "%ov.")))
 		   (lambda x (rename (g))))))
-	
+
     (let recur ((vars vars) (defaulters defaulters)
 		(ats arg-tests) (non-defaults '())
 		(supvars supvars) (sup-trues '()))
@@ -338,10 +338,10 @@
 			       (,tail (,%cdr ,tail)))
 		         . ,body)
 		       (,(car defaulters) ,@(reverse non-defaults) . ,sup-trues))))))))
-	    
 
-;;; Parse the clauses into 
-;;; - a list of vars, 
+
+;;; Parse the clauses into
+;;; - a list of vars,
 ;;; - a list of defaults,
 ;;; - a list of possible arg-tests. No arg-test is represented as #T.
 ;;; - a list of possible SUPPLIED? vars. An elt is either (var) or #f.
@@ -370,7 +370,7 @@
 			   (if (not (and (list? binding) (<= 2 (length binding) 4)))
 			       (error "Illegal binding form in LET-OPTIONAL or LET-OPTIONAL*"
 				      binding))
-			 
+
 			   (let* ((var (car binding))
 				  (vars (cons var vars))
 				  (defs (cons (cadr binding) defs))
@@ -392,7 +392,7 @@
 						 (error "Illegal SUPPLIED? parameter in LET-OPTIONAL or LET-OPTIONAL*"
 							binding sv))
 					     (values at sv)))))
-			       (values vars defs (cons at ats) (cons sup-var supvars))))))))				       
+			       (values vars defs (cons at ats) (cons sup-var supvars))))))))
 	       (values vars defs ats supvars rest-var)))))
 
 	((null? bindings) (values '() '() '() '() #f))
@@ -482,7 +482,7 @@
 ;;; This form is for evaluating optional arguments and their defaults
 ;;; in simple procedures that take a *single* optional argument. It is
 ;;; a macro so that the default will not be computed unless it is needed.
-;;; 
+;;;
 ;;; REST-ARG is a rest list from a lambda -- e.g., R in
 ;;;     (lambda (a b . r) ...)
 ;;; - If REST-ARG has 0 elements, evaluate DEFAULT-EXP and return that.
@@ -539,7 +539,7 @@
 ;      (call-with-values (lambda () (xparser arg))
 ;        (lambda (rest var ...)
 ;          (%let-optionals* rest (opt-clause ...) body ...))))
-    
+
 ;     ((%let-optionals* arg ((var default) opt-clause ...) body ...)
 ;      (call-with-values (lambda () (if (null? arg) (values default '())
 ; 				      (values (car arg) (cdr arg))))
@@ -589,7 +589,7 @@
 ;     ((fn (var ...) opts body ...)
 ;      (lambda (var ... . rest)
 ;        (let-optionals rest opts body ...)))))
-     
+
 ; (define-syntax defn
 ;   (syntax-rules ()
 ;     ((defn (name . params) opts body ...)
@@ -602,7 +602,7 @@
 ; ;;;   (FUN (var ... &OPTIONAL opt-clause ... &REST rest-var) body ...)
 ; ;;;   (DEFUN (name var ... &OPTIONAL opt-clause ... &REST rest-var)
 ; ;;;     body ...)
-; ;;;   (DEFUN name exp) 
+; ;;;   (DEFUN name exp)
 ; ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; (define-structure defun-package (export (fun   :syntax)

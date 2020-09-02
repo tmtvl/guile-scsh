@@ -87,7 +87,7 @@
 
 	((constant-glob? pat)
 	 (values (cons pat '()) #f)) ; Don't check filesys.
-	
+
 	(else (let* ((dots? (char=? #\. (string-ref pat 0))) ; Match dot files?
 		     (candidates (maybe-directory-files fname dots?))
 		     (re (glob->regexp pat)))
@@ -95,7 +95,7 @@
 			#t))))) ; These guys exist for sure.
 
 ;;; The initial special-case above isn't really for the fast-path; it's
-;;; an obscure and unlikely case. But since we have to check pat[0] for an 
+;;; an obscure and unlikely case. But since we have to check pat[0] for an
 ;;; initial dot, we have to do the check anyway...
 
 
@@ -134,7 +134,7 @@
 		  ((#\?) (lp '()
 			     (cons re-any (str-cons chars res))
 			     i))
-				
+
 		  ((#\[) (receive (re i) (parse-glob-bracket pat i)
 			   (lp '()
 			       (cons re (str-cons chars res))
@@ -256,7 +256,7 @@
 	     (pat '()))
       (if (= i pattern-len)
 	  (values (finish prefixes pat) i)
-	  
+
 	  (let ((c (string-ref pattern i)))
 	    (case c
 	      ((#\{)

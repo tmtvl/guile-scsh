@@ -66,11 +66,11 @@
 			 protocol-family/internet)
 		      (let* ((host (car  args))
 			     (port (cadr args))
-			     (host (car (host-info:addresses 
+			     (host (car (host-info:addresses
 					 (name->host-info host))))
 			     (port (cond ((integer? port) port)
 					 ((string? port)
-					  (service-info:port 
+					  (service-info:port
 					   (service-info (cadr args) "tcp")))
 					 (else
 					  (error
@@ -80,7 +80,7 @@
 		     ((= protocol-family
 			 protocol-family/unix)
 		      (unix-address->socket-address (car args)))
-		     (else 
+		     (else
 		      (error "socket-connect: unsupported protocol-family ~s"
 			     protocol-family)))))
     ;; Close the socket and free the file-descriptors
@@ -146,13 +146,13 @@
 	((not (<= 0 port16 #xffff))
 	 (error "internet-address->socket-address: port out of range ~s"
 		port16))
-	(else 
+	(else
 	 (make-socket-address address-family/internet
 			      (cons address32 port16)))))
-  
+
 (define (socket-address->internet-address sockaddr)
   (if (or (not (socket-address? sockaddr))
-	  (not (= (socket-address:family sockaddr) 
+	  (not (= (socket-address:family sockaddr)
 		  address-family/internet)))
       (error "socket-address->internet-address: internet socket expected ~s"
 	     sockaddr)
@@ -166,7 +166,7 @@
 
 (define (socket-address->unix-address sockaddr)
   (if (or (not (socket-address? sockaddr))
-	  (not (= (socket-address:family sockaddr) 
+	  (not (= (socket-address:family sockaddr)
 		  address-family/unix)))
       (error "socket-address->unix-address expects an unix socket ~s" sockaddr)
       (socket-address:address sockaddr)))
@@ -197,7 +197,7 @@
 ;(define (make-addr af)
 ;  (make-string (cond ((= af address-family/unix) 108)
 ;		     ((= af address-family/internet) 8)
-;		     (else 
+;		     (else
 ;		      (error "make-addr: unknown address-family ~s" af)))))
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -238,7 +238,7 @@
 		 (car (socket-address:address address))
 		 (cdr (socket-address:address address))))
 	  (else
-	   (error 
+	   (error
 	    "unrecognised socket family" family)))))
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -252,10 +252,10 @@
 	(else
 	 (let ((family (socket:family sock)))
 	   (if (not (= family (socket-address:family name)))
-	       (error 
+	       (error
 		"bind-socket: trying to bind incompatible address to socket ~s"
 		name)
-	       (apply bind 
+	       (apply bind
 		      (socket->port sock)
 		      (socket-address->list name)))))))
 
@@ -303,7 +303,7 @@
 	 (error "listen-socket: integer expected ~s" backlog))
 	(else
 	 (listen (socket->port sock) backlog))))
-	 
+
 (define-foreign %listen/errno
   (listen (integer sockfd)	; socket fdes
 	  (integer backlog))	; backlog
@@ -371,7 +371,7 @@
 		      (string-desc name))
   (to-scheme integer "False_on_zero"))
 
-(define-errno-syscall 
+(define-errno-syscall
   (%socket-name sock family name) %socket-name/errno)
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -390,7 +390,7 @@
 	    (integer how))
   (to-scheme integer errno_or_false))
 
-(define-errno-syscall 
+(define-errno-syscall
   (%shutdown sock how) %shutdown/errno)
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -410,7 +410,7 @@
   integer
   integer)
 
-(define-errno-syscall 
+(define-errno-syscall
   (%socket-pair type) %socket-pair/errno
   sockfd1
   sockfd2)
@@ -418,7 +418,7 @@
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ;;; recv syscall
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-(define (receive-message socket len . maybe-flags) 
+(define (receive-message socket len . maybe-flags)
   (let ((flags (:optional maybe-flags 0)))
     (cond ((not (socket? socket))
 	   (error "receive-message: socket expected ~s" socket))
@@ -477,11 +477,11 @@
 	  ((or (not (integer? flags))
 	       (not (integer? len)))
 	   (error "receive-message/partial: integer expected ~s ~s" flags len))
-	  (else 
+	  (else
 	   (let ((s (make-string len)))
 	     (receive (nread addr)
 		      (receive-message!/partial socket s 0 len flags)
-		      (values 
+		      (values
 		       (cond ((not nread) #f)	; EOF
 			     ((= nread len) s)
 			     (else (substring s 0 nread)))
@@ -497,9 +497,9 @@
 	      ((not (integer? flags))
 	       (error "receive-message!/partial: integer expected ~s"
 		      flags))
-	      (else 
+	      (else
 	       (generic-receive-message!/partial (socket->port socket)
-						 flags 
+						 flags
 						 s start end
 						 'dummy
 						 (socket:family socket)))))))
@@ -547,7 +547,7 @@
 	   (error "send-message: integer expected ~s" flags))
 	  ((not (string? s))
 	   (error "send-message: string expected ~s" s))
-	  (else 
+	  (else
 	   (generic-send-message (socket->port socket) flags
 				 s start end
 				 'dummy
@@ -556,7 +556,7 @@
 
 (define (generic-send-message sockfd flags s start end writer family addr)
   (if (bogus-substring-spec? s start end)
-      (error "Bad substring indices" 
+      (error "Bad substring indices"
 	     sockfd flags family addr
 	     s start end writer))
   (let loop ((i start))
@@ -578,7 +578,7 @@
 	   (error "send-message/partial: integer expected ~s" flags))
 	  ((not (string? s))
 	   (error "send-message/partial: string expected ~s" s))
-	  (else 
+	  (else
            (generic-send-message/partial (socket->port socket) flags
 					 s start end
 					 'dummy
@@ -587,7 +587,7 @@
 
 (define (generic-send-message/partial sockfd flags s start end writer family addr)
   (if (bogus-substring-spec? s start end)
-      (error "Bad substring indices" 
+      (error "Bad substring indices"
 	     sockfd flags family addr
 	     s start end writer))
   (if (= start end) 0			; Vacuous request.
@@ -609,7 +609,7 @@
 	     integer))
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-;;; getsockopt syscall 
+;;; getsockopt syscall
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 (define (socket-option sock level option)
@@ -630,7 +630,7 @@
 	;; ((timeout-option? option)
 	;; (receive (result/secs usecs)
 	;;	  (%getsockopt-linger (socket->fdes sock) level option)
-	;;   (cond ((= result/secs -1) 
+	;;   (cond ((= result/secs -1)
 	;;	  (error "socket-option ~s ~s ~s" sock level option))
 	;;	 (else (+ result/secs (/ usecs 1000))))))
 	(else
@@ -654,7 +654,7 @@
 	     integer) ; error/on-off
   integer) ; linger time
 
-(define-errno-syscall 
+(define-errno-syscall
   (%getsockopt-linger sock level option) %getsockopt-linger/errno 
   on-off
   linger)
@@ -667,13 +667,13 @@
 	     integer) ; error/secs
   integer) ; usecs
 
-(define-errno-syscall 
+(define-errno-syscall
   (%getsockopt-timeout sock level option) %getsockopt-timeout/errno
   secs
   usecs)
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-;;; setsockopt syscall 
+;;; setsockopt syscall
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 (define (set-socket-option sock level option value)
@@ -686,14 +686,14 @@
 	((value-option? option)
 	 (setsockopt (socket->port sock) level option value))
 	((linger-option? option)
-	 (setsockopt(socket->port sock) level option 
+	 (setsockopt(socket->port sock) level option
 		    (if value (cons 1 value) (cons 0 0))))
 	;;((timeout-option? option)
 	;; (let ((secs (truncate value)))
 	;;   (%setsockopt-timeout (socket->fdes sock) level option 
 	;;			secs
 	;;			(truncate (* (- value secs) 1000)))))
-	(else 
+	(else
 	 "set-socket-option: unknown option type")))
 
 (define-foreign %setsockopt/errno
@@ -703,7 +703,7 @@
 		     (integer optval))
   (to-scheme integer errno_or_false))
 
-(define-errno-syscall 
+(define-errno-syscall
   (%setsockopt sock level option value) %setsockopt/errno)
 
 
@@ -715,7 +715,7 @@
 			    (integer time))
   (to-scheme integer errno_or_false))
 
-(define-errno-syscall 
+(define-errno-syscall
   (%setsockopt-linger sock level option on-off time) %setsockopt-linger/errno)
 
 (define-foreign %setsockopt-timeout/errno
@@ -726,7 +726,7 @@
 			     (integer usecs))
   (to-scheme integer errno_or_false))
 
-(define-errno-syscall 
+(define-errno-syscall
   (%setsockopt-timeout sock level option secs usecs) %setsockopt-timeout/errno)
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -762,7 +762,7 @@
 	(else (error "host-info: string or socket-address expected ~s" arg))))
 
 (define (address->host-info name)
-  (if (or (not (socket-address? name)) 
+  (if (or (not (socket-address? name))
 	  (not (= (socket-address:family name) address-family/internet)))
       (error "address->host-info: internet address expected ~s" name)
       (let* ((vec (gethostbyaddr (car (socket-address:address name))))
@@ -777,7 +777,7 @@
   static-string	; host name
   (C char**)    ; alias list
   (C char**))   ; address list
-  
+
 (define (name->host-info name)
   (if (not (string? name))
       (error "name->host-info: string expected ~s" name)
@@ -793,7 +793,7 @@
   static-string	; host name
   (C char**)    ; alias list
   (C char**))   ; address list
-  
+
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ;;; network lookup
@@ -806,7 +806,7 @@
 (define (network-info arg)
   (cond ((string? arg) (name->network-info arg))
 	((socket-address? arg) (address->network-info arg))
-	(else 
+	(else
 	 (error "network-info: string or socket-address expected ~s" arg))))
 
 (define (address->network-info name)
@@ -817,14 +817,14 @@
 	     (aliases (vector-ref vec 1))
 	     (net (vector-ref vec 3)))
 	(make-network-info name aliases net))))
-		  
+
 (define-foreign %net-address->network-info
   (scheme_net_address2net_info (string-desc name) (string-desc net))
   (to-scheme integer "False_on_zero")
   static-string	; net name
   (C char**))   ; alias list
 
-  
+
 (define (name->network-info name)
   (if (not (string? name))
       (error "name->network-info: string expected ~s" name)
@@ -833,7 +833,7 @@
 	     (aliases (vector-ref vec 1))
 	     (net (vector-ref vec 3)))
 	(make-network-info name aliases net))))
-		  
+
 (define-foreign %net-name->network-info
   (scheme_net_name2net_info (string name) (string-desc net))
   (to-scheme integer "False_on_zero")
@@ -868,7 +868,7 @@
 		  (port (vector-ref vec 2))
 		  (proto (vector-ref vec 3)))
 	     (make-service-info name aliases port proto))))))
-		  
+
 (define-foreign %service-port->service-info
   (scheme_serv_port2serv_info (integer name) (string  proto))
   (to-scheme integer "False_on_zero")
@@ -876,8 +876,8 @@
   (C char**)     ; alias list
   integer        ; port number
   static-string) ; protocol name
-  
-  
+
+
 (define (name->service-info name . maybe-proto)
   (let* ((vec (getservbyname name (:optional maybe-proto "")))
 	 (name (vector-ref vec 0))
@@ -885,7 +885,7 @@
 	 (port (vector-ref vec 2))
 	 (proto (vector-ref vec 3)))
     (make-service-info name aliases port proto)))
-		  
+
 (define-foreign %service-name->service-info
   (scheme_serv_name2serv_info (string name) (string proto))
   (to-scheme integer "False_on_zero")
@@ -907,7 +907,7 @@
 	((integer? arg) (number->protocol-info arg))
 	(else (error "protocol-info: string or integer expected ~s" arg))))
 
-(define (number->protocol-info name) 
+(define (number->protocol-info name)
   (if (not (integer? name))
       (error "number->protocol-info: integer expected ~s" name)
       (let* ((vec (getprotobynumber name))
@@ -922,7 +922,7 @@
   static-string	; protocol name
   (C char**)    ; alias list
   integer)      ; protocol number
-  
+
 (define (name->protocol-info name)
   (if (not (string? name))
       (error "name->protocol-info: string expected ~s" name)
@@ -931,7 +931,7 @@
 	     (aliases (vector-ref vec 1))
 	     (number (vector-ref vec 2)))
 	(make-protocol-info name aliases number))))
-		  
+
 (define-foreign %protocol-name->protocol-info
   (scheme_proto_name2proto_info (string name))
   (to-scheme integer "False_on_zero")
@@ -940,7 +940,7 @@
   integer)      ; protocol number
 
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-;;; Lowlevel junk 
+;;; Lowlevel junk
 ;;;-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 ;; Used to pull address list back
 ;; based on C-string-vec->Scheme from cig/libcig.scm

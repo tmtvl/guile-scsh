@@ -62,7 +62,7 @@
 	     (scsh fluid)
 	     (scsh stringcoll)
 	     (scsh scsh-condition)
-	     
+
 	     ;; define-simple-syntax generates code that requires
 	     ;; (scsh alt-syntax).
 	     ;; other macros generate code that requires
@@ -74,7 +74,7 @@
 
 	     ;; replaces rename-file.
 	     (scsh filesys)
-	     
+
 	     (scsh time)
 	     (scsh newports)
 

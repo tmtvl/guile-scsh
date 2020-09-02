@@ -23,7 +23,7 @@
  (define open-input-file #f)
  (define open-output-file #f))
 
-(export fdport? set-port-buffering 
+(export fdport? set-port-buffering
 	bufpol/block bufpol/line bufpol/none
 	open-file open-input-file open-output-file
 	call/fdes close-after

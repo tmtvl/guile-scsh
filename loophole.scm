@@ -11,4 +11,3 @@
     ((loophole ?type ?form)
      (begin (lambda () ?type)    ;Elicit unbound-variable warnings, etc.
 	    ?form))))
-    

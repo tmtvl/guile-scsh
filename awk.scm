@@ -221,7 +221,7 @@
 			      (caddr exp)))
 	 (rec-var (car rec/field-vars))	; The var bound to the record.
 	 (rest (cdddr exp)))		; Stuff after the rec&field-vars.
-      
+
     (receive (rec-counter state-inits clauses)		; Parse out the last
 	     (if (list? (car rest))			; three parts of the
 		 (values #f (car rest) (cdr rest)) 	; form.
@@ -310,9 +310,9 @@
 				      (and (range? clause)
 					   (r (gensym "r."))))
 				    clauses))
-	       
+
 	     (svars (map car state-inits))	; The user's state variables.
-	     
+
 	     ;; If the user didn't declare a record-counter var,
 	     ;; but he is testing line numbers (with integer test forms),
 	     ;; go ahead and generate a record-counter of our own.
@@ -332,7 +332,7 @@
 					   (map cadr state-inits)))
 	     ;; A LET list initialising all the loop vars.
 	     (loop-var-init (map list loop-vars loop-var-init-values))
-	     
+
 	     ;; Build the clause that computes the loop's return value.
 	     ;; If the user gave an AFTER clause, use its body. Otherwise,
 	     ;; it's (values ,@svars).
@@ -363,7 +363,7 @@
 			    `(,%let ,per-iteration-updates
 			       . ,(deblock loop-body r c))
 			    loop-body)))
-	       
+
 	`(,%let ((,reader (,%lambda () ,reader-exp))
 		 . ,regexp-inits)
 	   (,%let ,lp-var ,loop-var-init
@@ -390,7 +390,7 @@
 	   clause)
 
 	  (else `(,(hack-simple-test test) . ,(cdr clause))))))
-	  
+
 
 ;;; Expand into the body of the awk loop -- the code that tests & executes
 ;;; each clause, and then jumps to the top of the loop.
@@ -524,7 +524,7 @@
 			     . ,null-clause-list))))
 
 	 (loop-vars (if else-var (cons else-var svars) svars)))
-    
+
     ;; Do the core computation, update the iteration vars,
     ;; and then do the tail in the scope of the updated environment.
     (core-then-tail loop-vars core tail r c)))
@@ -577,7 +577,7 @@
 
 	 (%if      (r 'if))
 	 (%let     (r 'let))
-	 
+
 	 ;; We are hard-wiring the else var to #t after this, so the core
 	 ;; expression doesn't need to return it -- just the new values
 	 ;; of the user's state vars.
@@ -609,11 +609,11 @@
 			      (,%values #f . ,svars)))
 			  `((,%values #f ,(blockify body r c)))) ; Gratuitous.
 		      body)			; State vars, but no else var.
-		   
+
 		  ;; No state vars -- ignore value computed by BODY forms.
 		  `(,@body . ,(if else-var '(#f) `())))
 	      r c)))
-	  
+
 
 ;;; The clause didn't execute. Return the svars unchanged, and also
 ;;; return the current else-value if we are tracking one. We return
@@ -623,7 +623,7 @@
 (define (null-clause-action else-var svars r)
   (sloppy-mult-values (if else-var (cons else-var svars) svars)
 		      r))
-	  
+
 
 
 ;;; These procs are for handling RANGE clauses.
@@ -660,7 +660,7 @@
 (define (next-range start-test stop-test state)
   (if state
       (let ((not-stop (not (stop-test))))
-	(values not-stop				
+	(values not-stop
 		(or not-stop			; Stop,
 		    (start-test))))		;   but restart.
       (values #f
